@@ -25,6 +25,11 @@ const UserSchema = new Schema<IUser>({
     profile : {
         type : Object, 
         required: false
+    }, 
+    is_verified : {
+        type: Boolean, 
+        required: true, 
+        default : false
     }
 }, { timestamps: true });
 

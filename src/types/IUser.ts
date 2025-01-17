@@ -7,6 +7,7 @@ export default interface IUser {
     password: string;
     name?: string;
     profile? : ICloudinaryFile;
+    is_verified : boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }
