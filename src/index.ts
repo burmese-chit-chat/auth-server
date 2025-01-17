@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 require("dotenv").config();
 
-const PORT: Readonly<number> = 3001;
+const PORT: Readonly<number> = 8001;
 const mongo_url = process.env.MONGO_URL;
 if (!mongo_url) {
     throw new Error("MONGO_URL is not defined");
