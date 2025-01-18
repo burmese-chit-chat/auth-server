@@ -1,6 +1,7 @@
 import express from "express";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import AuthRoutes from "./routes/auth";
 require("dotenv").config();
 
 const PORT: Readonly<number> = 8001;
@@ -10,15 +11,14 @@ if (!mongo_url) {
 }
 
 const app = express();
+app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
     console.log('path', req.path);
     res.send("hello world from burmese chit chat AUTHENTICATION service");
 });
 
-app.get('/auth', (req: Request, res: Response) => {
-    res.send('auth path');
-});
+app.use('/auth', AuthRoutes);
 
 app.get('/users', (req : Request, res: Response) => {
     res.send('user path');
