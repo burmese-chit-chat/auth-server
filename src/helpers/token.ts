@@ -1,7 +1,9 @@
 import { Response } from "express";
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import 'dotenv/config';
 import mongoose from "mongoose";
+import User from "../models/User";
+import IUser from "../types/IUser";
 
 export function generateToken (_id : mongoose.Types.ObjectId) : string {
     const maxAge = 3 * 24 * 60 * 60; // 3 days in seconds
@@ -25,4 +27,24 @@ export function removeToken (res : Response) : string {
     const token = '';
     res.cookie('token', token, { httpOnly : true, maxAge : -1, secure : true, sameSite : 'none' , partitioned : true });
     return token;
+}
+
+export async function getUserFromToken (token : string) : Promise<IUser | null>
+{
+    if(!token) {
+        throw new Error('token not found');
+    }
+
+    try {
+        const decodedValue = jwt.verify(token, process.env.JWT_SECRET_KEY!) as JwtPayload;
+
+        if(decodedValue && typeof decodedValue !== 'string' && '_id' in decodedValue) {
+            const user : IUser | null = await User.findById(decodedValue._id);
+            return user;
+        }
+
+        throw new Error('Invalid token');
+    } catch (e : any) {
+        throw new Error(e.message);
+    }
 }
