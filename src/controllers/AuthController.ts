@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/User";
 import { send_error_response, send_response } from "../helpers/response";
-import { setHTTPOnlyToken, getUserFromToken } from "../helpers/token";
+import { setHTTPOnlyToken, getUserFromToken, removeToken } from "../helpers/token";
 import IUser from "../types/IUser";
 
 const AuthController = {
@@ -57,6 +57,16 @@ const AuthController = {
             send_response(res, 200, null, 'username is valid');
         } catch (e) {
             send_error_response(res, 400, (e as Error).message);
+        }
+    }, 
+
+    logout : async ( req : Request, res : Response ) => {
+        try {
+            const token = removeToken(res);
+            send_response(res, 200, null, 'successfully logged out', token);
+        } catch (e) {
+            console.log(e);
+            send_error_response(res, 500, 'error logging out');
         }
     }
 };

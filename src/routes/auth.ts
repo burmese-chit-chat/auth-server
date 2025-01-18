@@ -6,6 +6,7 @@ AuthRoutes.get('/me', AuthController.me);
 AuthRoutes.post('/login', AuthController.login);
 AuthRoutes.post('/register', AuthController.register);
 AuthRoutes.get('/is-valid-username', AuthController.is_valid_username);
+AuthRoutes.get('/logout', AuthController.logout);
 
 
 export default AuthRoutes;
