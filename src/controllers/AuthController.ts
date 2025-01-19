@@ -24,7 +24,16 @@ const AuthController = {
     },
 
     login : async (req : Request, res : Response) => {
-        res.send('Login route');
+        console.log('login body', req.body);
+        try {
+            const { username, password } = req.body;
+            const user = await User.login(username, password);
+            if(!user || !user._id)  throw new Error('error logging in, invalid credentials');
+            const token = await setHTTPOnlyToken(user._id, res);
+            send_response(res, 200, user, "successfully logged in", token);
+        } catch (e) {
+            send_error_response(res, 400, (e as Error).message);
+        }
     }, 
 
     register : async (req : Request, res : Response) => {
