@@ -8,6 +8,9 @@ export default interface IUser {
     name?: string;
     profile? : ICloudinaryFile;
     is_verified : boolean;
+    gender? : string;
+    age? : number;
+    region: string;
     createdAt?: Date;
     updatedAt?: Date;
 }

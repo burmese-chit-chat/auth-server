@@ -2,6 +2,7 @@ import express from "express";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import AuthRoutes from "./routes/auth";
+import UserRoutes from "./routes/users";
 require("dotenv").config();
 
 const PORT: Readonly<number> = 8001;
@@ -19,13 +20,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use('/auth', AuthRoutes);
-
-app.get('/users', (req : Request, res: Response) => {
-    res.send('user path');
-})
-
-app.use(express.json());
-
+app.use('/users', UserRoutes);
 
 mongoose
     .connect(mongo_url, {})
