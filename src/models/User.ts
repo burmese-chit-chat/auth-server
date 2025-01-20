@@ -107,7 +107,7 @@ UserSchema.statics.update = async function (params : IUpdateFunction) : Promise<
         user.name = params.name || null;
         user.age = params.age || null;
         user.gender = params.gender || null;
-        user.region = params.gender || null;
+        user.region = params.region || null;
 
         await user.save();
         return user;
