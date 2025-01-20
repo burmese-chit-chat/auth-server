@@ -1,9 +1,11 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import UserController from '../controllers/UserController';
+import UserDataController from '../controllers/UserDataController';
 
 const UserRoutes = express.Router();
 
-UserRoutes.get('/:_id', (req : Request, res : Response) => {
-    console.log('user id in show function', req.params._id);
+UserRoutes.get('/:_id', UserController.show);
+UserRoutes.get('/:_id/user-data', UserDataController.show_with_user_id);
+UserRoutes.put('/:_id', UserController.update);
 
-    res.send('/users/_id');
-})
+export default UserRoutes;
