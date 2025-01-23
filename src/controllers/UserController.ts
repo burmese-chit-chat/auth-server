@@ -46,7 +46,29 @@ const UserController = {
             send_error_response(res, 500, (e as Error).message);            
         }
     },
+
+    destroy: async function (req : Request, res : Response) {
+        try {
+            const user_id = new mongoose.Types.ObjectId(req.params._id);
+            if(!user_id) throw new Error('user not found, id_needed');
+
+            // delete user search string
+            const search_string_document = await SearchString.destroy(user_id);
+            // delete user data 
+            const user_data = await UserData.destroy(user_id);
+            // delete user 
+            const user = await User.destroy(user_id);
+
+            send_response(res, 200, { user, user_data, search_string_document }, 'user deleted successfully');
+        } catch (e) {
+            console.log(e);
+            send_error_response(res, 500, (e as Error).message);
+        } 
+    }
 };
+
+
+
 
 function get_search_string_from_user_and_user_data (user : IUser, user_data : IUserData) : string {
     return `${ user.name }${ user_data.about_me }${ user_data.status_message }${ user_data.interests_1 }${ user_data.interests_2 }${ user_data.interests_3}${ user_data.interests_4}${ user_data.interests_5}`;
