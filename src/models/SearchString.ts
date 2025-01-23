@@ -5,6 +5,7 @@ import IUser from "../types/IUser";
 interface ISearchStringModel extends mongoose.Model<ISearchString> {
     update : ({user_id, search_string} : { user_id : mongoose.Types.ObjectId, search_string? : string}) => Promise<ISearchString>
     store : ({user_id, search_string} : { user_id : mongoose.Types.ObjectId, search_string? : string}) => Promise<ISearchString>
+    destroy : ( user_id : mongoose.Types.ObjectId) => Promise<ISearchString>
 }
 
 const SearchStringSchema = new Schema<ISearchString>({
@@ -32,6 +33,16 @@ SearchStringSchema.statics.store = async function ({user_id, search_string} : { 
 SearchStringSchema.statics.update = async function ({user_id, search_string} : { user_id : IUser['_id'], search_string : string}) : Promise<ISearchString> {
     try {
         const search_string_document = await this.findOneAndUpdate({ user_id }, { search_string });
+        return search_string_document;
+    } catch (e) {
+        console.log(e);
+        throw new Error((e as Error).message);
+    }
+}
+
+SearchStringSchema.statics.destroy = async function (user_id : IUser['_id']) : Promise<ISearchString> {
+    try {
+        const search_string_document = await this.findOneAndDelete({ user_id });
         return search_string_document;
     } catch (e) {
         console.log(e);

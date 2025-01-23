@@ -17,6 +17,7 @@ interface IUserModel extends mongoose.Model<IUser> {
     register(username: IUser['username'], password: IUser['password']) : Promise<IUser>;
     login(username: IUser['username'], password: IUser['password']) : Promise<IUser>;
     update(params : IUpdateFunction) : Promise<IUser>;
+    destroy(user_id : IUser['_id']) : Promise<IUser>;
 }
 
 
@@ -117,6 +118,16 @@ UserSchema.statics.update = async function (params : IUpdateFunction) : Promise<
     }
 }
 
+UserSchema.statics.destroy = async function(user_id : IUser['_id']) : Promise<IUser> {
+    try {
+        const user = await this.findByIdAndDelete(user_id);
+        return user;
+    } catch (e) {
+        console.log(e);
+        throw e;
+    }
+}
+
 async function get_hashed_string(original_string: string) : Promise<string> {
     try {
         const salt_rounds = 10;
@@ -138,6 +149,8 @@ async function compare_hashed_string(original_string: string, hashed_string: str
         throw e;
     }
 }
+
+
 
 
 const User : IUserModel = mongoose.model<IUser, IUserModel>("User", UserSchema);

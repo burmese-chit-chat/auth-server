@@ -14,6 +14,7 @@ interface IStoreFunctionProp {
 interface IUserDataModel extends mongoose.Model<IUserData> {
     store : (params : IStoreFunctionProp ) => Promise<IUserData>
     update : ( params : IStoreFunctionProp ) => Promise<IUserData>
+    destroy : ( user_id : mongoose.Types.ObjectId ) => Promise<IUserData>
 }
 
 const UserDataSchema = new Schema<IUserData>({
@@ -66,13 +67,24 @@ UserDataSchema.statics.update = async function (params : IStoreFunctionProp) : P
     try {
         const user_data = await this.findOneAndUpdate({ 
             user_id : params.user_id
-        }, params );
+        }, params , { new : true });
         return user_data;
     } catch (e) {
         console.log(e);
         throw new Error((e as Error).message);
     }
 }
+
+UserDataSchema.statics.destroy = async function (user_id : mongoose.Types.ObjectId) : Promise<IUserData> {
+    try {
+        const user_data = await this.findOneAndDelete({ user_id });
+        return user_data;
+    } catch (e) {
+        console.log(e);
+        throw new Error((e as Error).message);
+    }
+}
+
 
 const UserData : IUserDataModel = mongoose.model<IUserData, IUserDataModel>("UserData", UserDataSchema);
 export default UserData;
