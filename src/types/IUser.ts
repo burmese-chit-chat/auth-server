@@ -11,6 +11,7 @@ export default interface IUser {
     gender? : string;
     age? : number;
     region: string;
+    is_active? : boolean, 
     createdAt?: Date;
     updatedAt?: Date;
 }
