@@ -19,6 +19,10 @@ app.get("/", (req: Request, res: Response) => {
     res.send("hello world from burmese chit chat AUTHENTICATION service");
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.use('/auth', AuthRoutes);
 app.use('/users', UserRoutes);
 
