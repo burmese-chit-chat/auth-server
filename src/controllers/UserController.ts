@@ -6,6 +6,9 @@ import IUser from "../types/IUser";
 import IUserData from "../types/IUserData";
 import SearchString from "../models/SearchString";
 import { send_error_response, send_response } from "../helpers/response";
+import axios from "axios";
+require("dotenv").config();
+
 
 const UserController = {
     show : async function (req : Request, res : Response) {
@@ -34,7 +37,6 @@ const UserController = {
             const [ user, user_data ] = await Promise.all([
                 User.update({ _id : user_id, name , age, gender, region, secure_url : profile }), 
                 UserData.update({ user_id, interests_1, interests_2, interests_3, interests_4, interests_5, status_message, about_me }), 
-                
             ]);
 
             const search_string = get_search_string_from_user_and_user_data(user, user_data);
@@ -60,6 +62,11 @@ const UserController = {
             const user = await User.destroy(user_id);
 
             send_response(res, 200, { user, user_data, search_string_document }, 'user deleted successfully');
+            const api_url = process.env.API_URL;
+
+            axios.delete(`${api_url}/chat/conversations/user/${user_id}`).then(res => {
+                console.log(res.data);
+            }).catch(e => console.log(e));
         } catch (e) {
             console.log(e);
             send_error_response(res, 500, (e as Error).message);
