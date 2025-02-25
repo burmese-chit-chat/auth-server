@@ -40,8 +40,8 @@ const AuthController = {
         console.log('register body', req.body);
         console.log('here');
         try {
-            const { username, password } = req.body;
-            const user = await User.register(username, password);
+            const { username, password, gender } = req.body;
+            const user = gender ? await User.register(username, password, gender) : await User.register(username, password);
             if(!user || !user._id) {
                 throw new Error('User not registered');
             }

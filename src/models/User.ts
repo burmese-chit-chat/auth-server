@@ -14,7 +14,7 @@ interface IUpdateFunction {
     public_id? : string
 }
 interface IUserModel extends mongoose.Model<IUser> {
-    register(username: IUser['username'], password: IUser['password']) : Promise<IUser>;
+    register(username: IUser['username'], password: IUser['password'], gender? : IUser['gender']) : Promise<IUser>;
     login(username: IUser['username'], password: IUser['password']) : Promise<IUser>;
     update(params : IUpdateFunction) : Promise<IUser>;
     destroy(user_id : IUser['_id']) : Promise<IUser>;
@@ -65,12 +65,12 @@ const UserSchema = new Schema<IUser>({
     }
 }, { timestamps: true });
 
-UserSchema.statics.register = async function(username: IUser['username'], password: IUser['password']) : Promise<IUser> {
+UserSchema.statics.register = async function(username: IUser['username'], password: IUser['password'], gender? : IUser['gender']) : Promise<IUser> {
     try {
         const hashed_password : string = await get_hashed_string(password);
 
         // save user to database
-        const user  = new this({ username, password: hashed_password });
+        const user  = gender ? new this({ username, password: hashed_password, gender }) : new this({ username, password: hashed_password });
         await Promise.all([ user.save(), UserData.store({ user_id : user._id }) , SearchString.store({ user_id : user._id })]);
 
         // return user
